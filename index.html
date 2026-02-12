@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYDRA 5.2</title>
+
+<style>
+*{box-sizing:border-box;}
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#1c1f26;
+    color:white;
+}
+
+/* HEADER */
+.header{
+    position:fixed;
+    top:0; left:0; right:0;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    background:#232733;
+    border-bottom:1px solid #2e3442;
+    z-index:1000;
+}
+.left{cursor:pointer;font-weight:600;}
+.left:hover{color:#6fa8ff;}
+.right b{display:block;color:#6fa8ff;}
+.version{font-size:12px;opacity:0.6;}
+
+/* MENU */
+.overlay{
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.4);
+    opacity:0;visibility:hidden;
+    transition:0.3s;
+    z-index:900;
+}
+.overlay.active{opacity:1;visibility:visible;}
+.menu{
+    position:fixed;
+    top:60px;
+    left:-65%;
+    width:65%;
+    height:calc(100% - 60px);
+    background:#20242e;
+    transition:0.25s;
+    z-index:950;
+}
+.menu.active{left:0;}
+.menu li{
+    padding:18px 20px;
+    border-bottom:1px solid #2b313d;
+    cursor:pointer;
+}
+.menu li:hover{
+    background:#2a3040;
+    color:#6fa8ff;
+}
+
+/* CONTENT */
+.content{
+    margin-top:70px;
+    padding:20px;
+    min-height:100vh;
+    transition:opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* PAGE TRANSITION */
+.page-exit{
+    opacity:0;
+    transform:translateY(20px);
+}
+.page-enter{
+    opacity:0;
+    transform:translateY(-20px);
+}
+
+/* CARD */
+.card{
+    background:#232733;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+    border:1px solid #2e3442;
+    cursor:pointer;
+    transition:0.2s;
+}
+.card:hover{
+    border-color:#6fa8ff;
+    transform:translateY(-4px);
+}
+
+/* BACK */
+.back-btn{
+    position:fixed;
+    bottom:25px;
+    left:20px;
+    padding:9px 15px;
+    background:#232733;
+    border:1px solid #2e3442;
+    border-radius:30px;
+    font-size:14px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="left" onclick="toggleMenu()">💠 Tổng quát</div>
+    <div class="right">
+        <b>HYDRA</b>
+        <div class="version">Phiên bản: 5.2</div>
+    </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<div class="menu" id="menu">
+<ul>
+<li onclick="loadHome()">Trang chủ</li>
+<li onclick="loadProfile()">Hồ sơ</li>
+<li onclick="loadSettings()">Cài đặt</li>
+<li onclick="closeMenu()">Đăng xuất</li>
+</ul>
+</div>
+
+<div class="content" id="contentArea"></div>
+<div id="footerContainer"></div>
+
+<script>
+
+/* TRANSITION CORE */
+function smoothChange(render){
+    const content=document.getElementById("contentArea");
+    content.classList.add("page-exit");
+
+    setTimeout(()=>{
+        render();
+        content.classList.remove("page-exit");
+        content.classList.add("page-enter");
+
+        requestAnimationFrame(()=>{
+            content.classList.remove("page-enter");
+        });
+
+    },200);
+}
+
+/* MENU */
+function toggleMenu(){
+    document.getElementById("menu").classList.toggle("active");
+    document.getElementById("overlay").classList.toggle("active");
+}
+function closeMenu(){
+    document.getElementById("menu").classList.remove("active");
+    document.getElementById("overlay").classList.remove("active");
+}
+
+/* BACK */
+function showBack(){
+    document.getElementById("footerContainer").innerHTML=
+    `<div class="back-btn" onclick="loadHome()">← Trang chủ</div>`;
+}
+function hideBack(){
+    document.getElementById("footerContainer").innerHTML="";
+}
+
+/* HOME */
+function loadHome(){
+smoothChange(()=>{
+document.getElementById("contentArea").innerHTML=`
+<h2>Tôi là HYDRA 5.2</h2>
+<p>Hệ thống hỗ trợ học tập và giải trí.</p>
+
+<div class="card" onclick="loadStudy()">📘 Học tập</div>
+<div class="card" onclick="loadEntertainment()">🎮 Giải trí</div>
+<div class="card" onclick="loadChat()">💬 Trò chuyện</div>
+<div class="card" onclick="loadSystem()">⚙️ Quản lí hệ thống</div>
+`;
+hideBack();
+closeMenu();
+});
+}
+
+/* STUDY (ĐÃ XOÁ NỘI DUNG) */
+function loadStudy(){
+smoothChange(()=>{
+document.getElementById("contentArea").innerHTML=`
+<h2>📘 Học tập</h2>
+`;
+showBack();
+});
+}
+
+/* ENTERTAINMENT (ĐÃ XOÁ NỘI DUNG) */
+function loadEntertainment(){
+smoothChange(()=>{
+document.getElementById("contentArea").innerHTML=`
+<h2>🎮 Giải trí</h2>
+`;
+showBack();
+});
+}
+
+/* CHAT */
+function loadChat(){
+smoothChange(()=>{
+document.getElementById("contentArea").innerHTML=`
+<h2>💬 Trò chuyện</h2>
+<p style="opacity:0.7;">HYDRA đang chờ bạn nhập nội dung...</p>
+`;
+showBack();
+});
+}
+
+/* SYSTEM */
+function loadSystem(){
+smoothChange(()=>{
+let cpu=Math.floor(Math.random()*100);
+let ram=Math.floor(Math.random()*100);
+
+document.getElementById("contentArea").innerHTML=`
+<h2>⚙️ Quản lí hệ thống</h2>
+<p>CPU: ${cpu}%</p>
+<p>RAM: ${ram}%</p>
+<p style="color:#6fa8ff;">Trạng thái: Hoạt động ổn định</p>
+`;
+showBack();
+});
+}
+
+/* PLACEHOLDER */
+function loadProfile(){
+smoothChange(()=>{
+document.getElementById("contentArea").innerHTML="<h2>Hồ sơ</h2>";
+showBack();
+});
+}
+function loadSettings(){
+smoothChange(()=>{
+document.getElementById("contentArea").innerHTML="<h2>Cài đặt</h2>";
+showBack();
+});
+}
+
+/* INIT */
+loadHome();
+
+</script>
+</body>
+</html>
