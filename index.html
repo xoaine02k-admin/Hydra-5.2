@@ -3,62 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HYDRA 5.2</title>
+<title>HYDRA 5.4</title>
 
 <style>
 *{box-sizing:border-box;}
+
 body{
     margin:0;
     font-family:Arial, sans-serif;
-    background:#1c1f26;
+    background:linear-gradient(135deg,#14161c,#1c1f26,#20242e);
+    background-size:200% 200%;
+     /* animation:bgMove 14s ease infinite;  */
     color:white;
+    overflow-x:hidden;
+}
+
+@keyframes bgMove{
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
+/* PARTICLES */
+#particles{
+    position:fixed;
+    inset:0;
+    z-index:-1;
 }
 
 /* HEADER */
 .header{
     position:fixed;
-    top:0; left:0; right:0;
+    top:14px;
+    left:50%;
+    transform:translateX(-50%);
+    width:92%;
+    max-width:1100px;
+
     height:60px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding:0 18px;
-    background:#232733;
-    border-bottom:1px solid #2e3442;
+    padding:0 22px;
+
+    background:rgba(35,39,51,0.78);
+   
+
+    border-radius:24px;
+    border:1px solid rgba(111,168,255,0.18);
+
+    box-shadow:
+    0 8px 22px rgba(0,0,0,0.35),
+    0 0 12px rgba(111,168,255,0.06);
+
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+
+    overflow:hidden; /* 👈 thêm */
     z-index:1000;
 }
-.left{cursor:pointer;font-weight:600;}
-.left:hover{color:#6fa8ff;}
-.right b{display:block;color:#6fa8ff;}
-.version{font-size:12px;opacity:0.6;}
 
-/* MENU */
+/* SHINE EFFECT */
+.header::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-60%;
+    width:40%;
+    height:100%;
+
+    background:linear-gradient(
+        120deg,
+        transparent,
+        rgba(255,255,255,0.25),
+        transparent
+    );
+
+    transform:skewX(-25deg);
+    animation:shineMove 5s infinite;
+}
+
+@keyframes shineMove{
+    0%{ left:-60%; }
+    100%{ left:120%; }
+}
+/* Hiệu ứng glow chữ HYDRA */
+.header .right b{
+    background: linear-gradient(90deg,#6fa8ff,#9b8cff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing:1px;
+}
+
+/* Nút Tổng quát mềm hơn */
+.header .left{
+    cursor:pointer;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:14px;
+    transition:0.1s ease;
+}
+
+.header .left:hover{
+    background:rgba(111,168,255,0.15);
+    transform:translateY(-2px);
+}
+
+.version{
+    font-size:12px;
+    opacity:0.6;
+}
 .overlay{
     position:fixed;inset:0;
-    background:rgba(0,0,0,0.4);
+    background:rgba(0,0,0,0.5);
     opacity:0;visibility:hidden;
     transition:0.3s;
     z-index:900;
 }
 .overlay.active{opacity:1;visibility:visible;}
+
 .menu{
     position:fixed;
-    top:60px;
-    left:-65%;
-    width:65%;
-    height:calc(100% - 60px);
-    background:#20242e;
-    transition:0.25s;
+
+    top:14px;
+    left:14px;
+
+    width:260px;
+    height:calc(100% - 28px);
+
+    background:rgba(32,36,46,0.95);
+  
+
+    border-radius:24px;
+    border:1px solid rgba(111,168,255,0.12);
+
+    box-shadow:0 20px 40px rgba(0,0,0,0.6);
+
+    padding-top:80px;
+    padding-bottom:20px;
+
+    transform:translateX(-120%); /* 👈 THIẾU CÁI NÀY */
+    transition:transform 0.22s cubic-bezier(.25,.8,.25,1);
+    will-change: transform;
+
     z-index:950;
 }
-.menu.active{left:0;}
-.menu li{
-    padding:18px 20px;
-    border-bottom:1px solid #2b313d;
-    cursor:pointer;
+
+.menu.active{
+    transform:translateX(0);
 }
+
+.menu li{
+    padding:14px 18px;
+    margin:8px 14px;
+    border-radius:16px;
+    transition:0.2s ease;
+}
+
 .menu li:hover{
-    background:#2a3040;
+    background:rgba(111,168,255,0.15);
+    transform:translateX(6px);
     color:#6fa8ff;
 }
 
@@ -73,26 +176,28 @@ body{
 /* PAGE TRANSITION */
 .page-exit{
     opacity:0;
-    transform:translateY(20px);
+    transform:translateY(15px);
 }
 .page-enter{
     opacity:0;
-    transform:translateY(-20px);
+    transform:translateY(-15px);
 }
 
 /* CARD */
 .card{
-    background:#232733;
-    padding:15px;
-    border-radius:10px;
-    margin-top:15px;
-    border:1px solid #2e3442;
+    background:rgba(35,39,51,0.85);
+    
+    padding:18px;
+    border-radius:14px;
+    margin-top:18px;
+    border:1px solid rgba(111,168,255,0.1);
     cursor:pointer;
-    transition:0.2s;
+    transition:all 0.35s cubic-bezier(.25,.8,.25,1);
 }
 .card:hover{
+    transform:translateY(-6px) scale(1.02);
     border-color:#6fa8ff;
-    transform:translateY(-4px);
+    box-shadow:0 10px 30px rgba(111,168,255,0.2);
 }
 
 /* BACK */
@@ -101,31 +206,77 @@ body{
     bottom:25px;
     left:20px;
     padding:9px 15px;
-    background:#232733;
-    border:1px solid #2e3442;
+    background:rgba(35,39,51,0.9);
+    border:1px solid rgba(111,168,255,0.15);
     border-radius:30px;
     font-size:14px;
     cursor:pointer;
+    transition:0.3s;
+}
+.back-btn:hover{
+    box-shadow:0 5px 20px rgba(111,168,255,0.3);
+}
+
+/* SYSTEM MODAL */
+.system-modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+    
+    animation:fadeIn 0.3s ease;
+}
+
+.system-box{
+    background:rgba(35,39,51,0.95);
+    padding:25px;
+    width:85%;
+    max-width:400px;
+    border-radius:18px;
+    border:1px solid rgba(111,168,255,0.2);
+    box-shadow:0 15px 40px rgba(0,0,0,0.6);
+    animation:popUp 0.3s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0}
+    to{opacity:1}
+}
+@keyframes popUp{
+    from{transform:scale(0.9);opacity:0}
+    to{transform:scale(1);opacity:1}
+}
+
+.close-system{
+    margin-top:18px;
+    text-align:center;
+    cursor:pointer;
+    color:#6fa8ff;
 }
 </style>
 </head>
 <body>
 
+<canvas id="particles"></canvas>
+
 <div class="header">
     <div class="left" onclick="toggleMenu()">💠 Tổng quát</div>
     <div class="right">
         <b>HYDRA</b>
-        <div class="version">Phiên bản: 5.2</div>
+        <div class="version">Phiên bản: 5.4</div>
     </div>
 </div>
 
-<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+<div class="overlay" id="overlay"></div>
 
 <div class="menu" id="menu">
 <ul>
-<li onclick="loadHome()">Trang chủ</li>
-<li onclick="loadProfile()">Hồ sơ</li>
-<li onclick="loadSettings()">Cài đặt</li>
+<li onclick="menuAction(loadHome)">Trang chủ</li>
+<li onclick="menuAction(loadProfile)">Hồ sơ</li>
+<li onclick="menuAction(loadSettings)">Cài đặt</li>
 <li onclick="closeMenu()">Đăng xuất</li>
 </ul>
 </div>
@@ -134,8 +285,29 @@ body{
 <div id="footerContainer"></div>
 
 <script>
+const menu = document.getElementById("menu");
+const overlay = document.getElementById("overlay");
 
-/* TRANSITION CORE */
+/* Mở / đóng menu */
+function toggleMenu(){
+    menu.classList.toggle("active");
+    overlay.classList.toggle("active");
+}
+
+function closeMenu(){
+    menu.classList.remove("active");
+    overlay.classList.remove("active");
+}
+
+/* Khi bấm mục trong menu */
+function menuAction(action){
+    closeMenu();
+    setTimeout(()=>{
+        action();
+    },10);
+}
+
+/* TRANSITION */
 function smoothChange(render){
     const content=document.getElementById("contentArea");
     content.classList.add("page-exit");
@@ -144,38 +316,37 @@ function smoothChange(render){
         render();
         content.classList.remove("page-exit");
         content.classList.add("page-enter");
-
         requestAnimationFrame(()=>{
             content.classList.remove("page-enter");
         });
-
     },200);
 }
 
 /* MENU */
 function toggleMenu(){
-    document.getElementById("menu").classList.toggle("active");
-    document.getElementById("overlay").classList.toggle("active");
+    menu.classList.toggle("active");
+    overlay.classList.toggle("active");
 }
 function closeMenu(){
-    document.getElementById("menu").classList.remove("active");
-    document.getElementById("overlay").classList.remove("active");
+    menu.classList.remove("active");
+    overlay.classList.remove("active");
 }
+overlay.addEventListener("click",closeMenu);
 
 /* BACK */
 function showBack(){
-    document.getElementById("footerContainer").innerHTML=
+    footerContainer.innerHTML=
     `<div class="back-btn" onclick="loadHome()">← Trang chủ</div>`;
 }
 function hideBack(){
-    document.getElementById("footerContainer").innerHTML="";
+    footerContainer.innerHTML="";
 }
 
 /* HOME */
 function loadHome(){
 smoothChange(()=>{
-document.getElementById("contentArea").innerHTML=`
-<h2>Tôi là HYDRA 5.2</h2>
+contentArea.innerHTML=`
+<h2>Tôi là HYDRA 5.4</h2>
 <p>Hệ thống hỗ trợ học tập và giải trí.</p>
 
 <div class="card" onclick="loadStudy()">📘 Học tập</div>
@@ -188,22 +359,18 @@ closeMenu();
 });
 }
 
-/* STUDY (ĐÃ XOÁ NỘI DUNG) */
+/* STUDY */
 function loadStudy(){
 smoothChange(()=>{
-document.getElementById("contentArea").innerHTML=`
-<h2>📘 Học tập</h2>
-`;
+contentArea.innerHTML=`<h2>📘 Học tập</h2>`;
 showBack();
 });
 }
 
-/* ENTERTAINMENT (ĐÃ XOÁ NỘI DUNG) */
+/* ENTERTAINMENT */
 function loadEntertainment(){
 smoothChange(()=>{
-document.getElementById("contentArea").innerHTML=`
-<h2>🎮 Giải trí</h2>
-`;
+contentArea.innerHTML=`<h2>🎮 Giải trí</h2>`;
 showBack();
 });
 }
@@ -211,7 +378,7 @@ showBack();
 /* CHAT */
 function loadChat(){
 smoothChange(()=>{
-document.getElementById("contentArea").innerHTML=`
+contentArea.innerHTML=`
 <h2>💬 Trò chuyện</h2>
 <p style="opacity:0.7;">HYDRA đang chờ bạn nhập nội dung...</p>
 `;
@@ -219,35 +386,98 @@ showBack();
 });
 }
 
-/* SYSTEM */
+/* SYSTEM MODAL */
 function loadSystem(){
-smoothChange(()=>{
 let cpu=Math.floor(Math.random()*100);
 let ram=Math.floor(Math.random()*100);
 
-document.getElementById("contentArea").innerHTML=`
+const modal=document.createElement("div");
+modal.className="system-modal";
+
+modal.innerHTML=`
+<div class="system-box">
 <h2>⚙️ Quản lí hệ thống</h2>
+
 <p>CPU: ${cpu}%</p>
-<p>RAM: ${ram}%</p>
-<p style="color:#6fa8ff;">Trạng thái: Hoạt động ổn định</p>
+<div style="height:8px;background:#1c1f26;border-radius:10px;overflow:hidden;">
+<div style="height:100%;width:${cpu}%;background:#6fa8ff;"></div>
+</div>
+
+<p style="margin-top:12px;">RAM: ${ram}%</p>
+<div style="height:8px;background:#1c1f26;border-radius:10px;overflow:hidden;">
+<div style="height:100%;width:${ram}%;background:#6fa8ff;"></div>
+</div>
+
+<p style="margin-top:15px;color:#6fa8ff;">
+Trạng thái: Hoạt động ổn định
+</p>
+
+<div class="close-system">Đóng</div>
+</div>
 `;
+
+document.body.appendChild(modal);
+
+modal.addEventListener("click",e=>{
+if(e.target.classList.contains("system-modal") ||
+   e.target.classList.contains("close-system")){
+modal.remove();
+}
+});
+}
+
+/* PROFILE */
+function loadProfile(){
+smoothChange(()=>{
+contentArea.innerHTML="<h2>Hồ sơ</h2>";
 showBack();
 });
 }
 
-/* PLACEHOLDER */
-function loadProfile(){
-smoothChange(()=>{
-document.getElementById("contentArea").innerHTML="<h2>Hồ sơ</h2>";
-showBack();
-});
-}
+/* SETTINGS */
 function loadSettings(){
 smoothChange(()=>{
-document.getElementById("contentArea").innerHTML="<h2>Cài đặt</h2>";
+contentArea.innerHTML="<h2>Cài đặt</h2>";
 showBack();
 });
 }
+
+/* PARTICLES */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+for(let i=0;i<70;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2+1,
+dx:(Math.random()-0.5)*0.4,
+dy:(Math.random()-0.5)*0.4
+});
+}
+
+function animateParticles(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach(p=>{
+p.x+=p.dx;
+p.y+=p.dy;
+
+if(p.x<0||p.x>canvas.width)p.dx*=-1;
+if(p.y<0||p.y>canvas.height)p.dy*=-1;
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+ctx.fillStyle="rgba(111,168,255,0.5)";
+ctx.fill();
+});
+
+requestAnimationFrame(animateParticles);
+}
+animateParticles();
 
 /* INIT */
 loadHome();
